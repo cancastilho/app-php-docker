@@ -4,18 +4,18 @@
 
 echo "<h3>LDAP query test</h3>";
 echo "Connecting ...";
-$ds=ldap_connect("localhost");  // must be a valid LDAP server!
+$ds=ldap_connect("ldap://127.0.0.1:1389");  // must be a valid LDAP server!
 echo "connect result is " . $ds . "<br />";
-
+ldap_set_option($ldapconn, LDAP_OPT_PROTOCOL_VERSION, 3);
 if ($ds) {
     echo "Binding ...";
-    $r=ldap_bind($ds);     // this is an "anonymous" bind, typically
+    $r=ldap_bind($ds, 'cn=admin,dc=example,dc=org', 'adminpassword');     // this is an "anonymous" bind, typically
                            // read-only access
     echo "Bind result is " . $r . "<br />";
 
     echo "Searching for (sn=S*) ...";
     // Search surname entry
-    $sr=ldap_search($ds, "o=My Company, c=US", "sn=S*");
+    $sr=ldap_search($ds, "dc=example,dc=org", "cn=admin");
     echo "Search result is " . $sr . "<br />";
 
     echo "Number of entries returned is " . ldap_count_entries($ds, $sr) . "<br />";
